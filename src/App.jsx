@@ -1,4 +1,4 @@
-import CreateEditForm from './components/CreateEditForm';
+import CreateEditForm from './components/CreateUserForm';
 import DeleteUser from './components/DeleteUser';
 import Footer from './components/Footer';
 import Header from './components/Header';

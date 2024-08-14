@@ -8,9 +8,7 @@ export default function UserList() {
             <SearchBar />
 
             <Table />
-
-            {/* New user button  */}
-            <button className="btn-add btn">Add new user</button>
+            
 
             <Pagination />
             

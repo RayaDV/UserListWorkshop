@@ -1,17 +1,43 @@
-import UserListItem from "./UserListItem";
-import { getAll } from "../services/userService";
 import { useState, useEffect } from 'react';
+
 import * as userService from '../services/userService'
+
+import UserListItem from "./UserListItem";
+import CreateUserForm from "./CreateUserForm";
 
 export default function Table() {
     const [users, setUsers] = useState([]);
-
-    console.log(users);
+    const [showCreate, setShowCreate] = useState(false);
 
     useEffect(() => {
         userService.getAll()
-            .then(result => setUsers(result));
+            .then(result => setUsers(result))
+            .catch(err => console.log(err));
     }, [])  // [] - function will be called once when mounted
+
+    const createUserClickHandler = () => {
+        setShowCreate(true);
+    };
+
+    const hideCreateUserForm = () => {
+        setShowCreate(false);
+    };
+
+    const userCreateHanler = async (e) => {
+        // Stop page from reloading
+        e.preventDefault();  
+
+        // Get the information as data from form data
+        const data = Object.fromEntries(new FormData(e.currentTarget)); 
+        // Give the information to the service and it creates our record at the server and return this record 
+        const newUser = await userService.create(data); 
+
+        // Add newly created user to the local state without taking all users
+        setUsers(state => [...state, newUser]); 
+        
+        //Close the modal
+        setShowCreate(false);
+    }
 
     return (
         <div className="table-wrapper">
@@ -84,6 +110,13 @@ export default function Table() {
                 </div> */}
             {/* </div> */}
 
+            {showCreate && (
+                <CreateUserForm 
+                    onClose={hideCreateUserForm} 
+                    onUserCreate={userCreateHanler}
+                />
+            )}
+            
             <table className="table">
                 <thead>
                     <tr>
@@ -154,6 +187,9 @@ export default function Table() {
 
                 </tbody>
             </table>
+
+            {/* New user button  */}
+            <button className="btn-add btn" onClick={createUserClickHandler}>Add new user</button>
         </div>
     );
 }
