@@ -1,6 +1,6 @@
-export default function CreateUserForm ({
+export default function CreateUserModal ({
     onClose,
-    onUserCreate,
+    onCreate,
 }) {
     return (
         <div className="overlay">
@@ -18,7 +18,7 @@ export default function CreateUserForm ({
                             </svg>
 						</button>
 					</header>
-					<form onSubmit={onUserCreate}>
+					<form onSubmit={onCreate}>
 						<div className="form-row">
 						<div className="form-group">
 							<label htmlFor="firstName">First name</label>

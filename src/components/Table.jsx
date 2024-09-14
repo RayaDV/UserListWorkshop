@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react';
 import * as userService from '../services/userService'
 
 import UserListItem from "./UserListItem";
-import CreateUserForm from "./CreateUserForm";
+import CreateUserModal from "./CreateUserModal";
 
 export default function Table() {
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
+    cosnt [showDetails, setShowDetails] = useState(false);
 
     useEffect(() => {
         userService.getAll()
@@ -23,7 +24,7 @@ export default function Table() {
         setShowCreate(false);
     };
 
-    const userCreateHanler = async (e) => {
+    const userCreateHandler = async (e) => {
         // Stop page from reloading
         e.preventDefault();  
 
@@ -38,6 +39,10 @@ export default function Table() {
         //Close the modal
         setShowCreate(false);
     }
+
+    const userInfoClickHandler = (userId) => {
+        console.log(userId);
+    };
 
     return (
         <div className="table-wrapper">
@@ -111,11 +116,16 @@ export default function Table() {
             {/* </div> */}
 
             {showCreate && (
-                <CreateUserForm 
+                <CreateUserModal 
                     onClose={hideCreateUserForm} 
-                    onUserCreate={userCreateHanler}
+                    onCreate={userCreateHandler}
                 />
             )}
+
+            {showInfo && 
+                <UserDetailsModal 
+                    onClose={() => setShowDetails(fasle)}
+                />}
             
             <table className="table">
                 <thead>
@@ -176,12 +186,14 @@ export default function Table() {
                     {users.map(user => (
                         <UserListItem 
                             key={user._id}  // unique id from server
+                            userId={user._id}
                             firstName={user.firstName}
                             lastName={user.lastName}
                             email={user.email}
                             phoneNumber={user.phoneNumber}
                             createdAt={user.createdAt}
                             imageUrl={user.imageUrl}
+                            onInfoClick={userInfoClickHandler}
                         /> // <UserListItem {...user} /> // destructed and given as props instead of this
                     ))}
 
