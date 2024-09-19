@@ -4,11 +4,13 @@ import * as userService from '../services/userService'
 
 import UserListItem from "./UserListItem";
 import CreateUserModal from "./CreateUserModal";
+import UserInfoModal from "./UserInfoModal";
 
 export default function Table() {
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
-    cosnt [showDetails, setShowDetails] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         userService.getAll()
@@ -20,7 +22,7 @@ export default function Table() {
         setShowCreate(true);
     };
 
-    const hideCreateUserForm = () => {
+    const hideCreateUserModal = () => {
         setShowCreate(false);
     };
 
@@ -40,12 +42,14 @@ export default function Table() {
         setShowCreate(false);
     }
 
-    const userInfoClickHandler = (userId) => {
-        console.log(userId);
+    const userInfoClickHandler = async (userId) => {
+        setSelectedUser(userId);
+        setShowInfo(true);
     };
 
     return (
         <div className="table-wrapper">
+
             {/* Overlap components  */}
 
             {/* <div className="loading-shade"> */}
@@ -117,15 +121,17 @@ export default function Table() {
 
             {showCreate && (
                 <CreateUserModal 
-                    onClose={hideCreateUserForm} 
+                    onClose={hideCreateUserModal} 
                     onCreate={userCreateHandler}
                 />
             )}
 
-            {showInfo && 
-                <UserDetailsModal 
-                    onClose={() => setShowDetails(fasle)}
-                />}
+            {showInfo && (
+                <UserInfoModal 
+                    onClose={() => setShowInfo(false)}
+                    userId={selectedUser}
+                />
+            )}
             
             <table className="table">
                 <thead>
