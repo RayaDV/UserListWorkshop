@@ -1,5 +1,5 @@
 import CreateEditModal from './components/CreateUserModal';
-import DeleteUser from './components/DeleteUser';
+import DeleteUser from './components/DeleteUserModal';
 import Footer from './components/Footer';
 import Header from './components/Header';
 // import UserDetails from './components/UserDetails';

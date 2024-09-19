@@ -5,11 +5,13 @@ import * as userService from '../services/userService'
 import UserListItem from "./UserListItem";
 import CreateUserModal from "./CreateUserModal";
 import UserInfoModal from "./UserInfoModal";
+import DeleteUserModal from "./DeleteUserModal";
 
 export default function Table() {
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
@@ -46,6 +48,23 @@ export default function Table() {
         setSelectedUser(userId);
         setShowInfo(true);
     };
+
+    const deleteUserClickHandler = (userId) => {
+        setSelectedUser(userId);
+        setShowDelete(true);
+    };
+
+    // it must be try-catched
+    const deleteUserHandler = async () => {   
+        // Remove user from server
+        await userService.remove(selectedUser);
+
+        // Remove user from state
+        setUsers(state => state.filter(user => user.userId !== selectedUser));
+
+        // Close the delete modal
+        setShowDelete(false);
+    }
 
     return (
         <div className="table-wrapper">
@@ -132,6 +151,13 @@ export default function Table() {
                     userId={selectedUser}
                 />
             )}
+
+            {showDelete && (
+                <DeleteUserModal 
+                    onClose={() => setShowDelete(false)}
+                    onDelete={deleteUserHandler}
+                />
+            )}
             
             <table className="table">
                 <thead>
@@ -200,6 +226,7 @@ export default function Table() {
                             createdAt={user.createdAt}
                             imageUrl={user.imageUrl}
                             onInfoClick={userInfoClickHandler}
+                            onDeleteClick={deleteUserClickHandler}
                         /> // <UserListItem {...user} /> // destructed and given as props instead of this
                     ))}
 
