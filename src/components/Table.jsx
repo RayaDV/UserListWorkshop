@@ -6,18 +6,23 @@ import UserListItem from "./UserListItem";
 import CreateUserModal from "./CreateUserModal";
 import UserInfoModal from "./UserInfoModal";
 import DeleteUserModal from "./DeleteUserModal";
+import Spinner from './Spinner';
 
 export default function Table() {
     const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [showCreate, setShowCreate] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
+        setIsLoading(true);
+
         userService.getAll()
             .then(result => setUsers(result))
-            .catch(err => console.log(err));
+            .catch(err => console.log(err))
+            .finally(() => setIsLoading(false));
     }, [])  // [] - function will be called once when mounted
 
     const createUserClickHandler = () => {
@@ -73,7 +78,7 @@ export default function Table() {
 
             {/* <div className="loading-shade"> */}
             {/* Loading spinner  */}
-            {/* <div className="spinner"></div> */}
+            
             {/* No users added yet  */}
 
             {/* <div className="table-overlap">
@@ -158,6 +163,9 @@ export default function Table() {
                     onDelete={deleteUserHandler}
                 />
             )}
+
+            {isLoading && <Spinner />}
+
             
             <table className="table">
                 <thead>
